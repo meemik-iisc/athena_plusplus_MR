@@ -35,6 +35,7 @@ athena
 *.vtk
 *.athdf*
 *.hst
+*.err
 *.rst
 meshtest.dat
 
@@ -66,3 +67,6 @@ meshtest.dat
 
 # compiled doxygen file
 doc/doxy*
+
+# Local build directories/files
+build*

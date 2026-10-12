@@ -1,0 +1,70 @@
+<comment>
+problem   = runaway BH (M = 2e7 Msun, v = 1000 km/s) in uniform CGM, BH rest frame
+reference = Bondi-Hoyle-Lyttleton accretion; axisymmetric (R,z) via few phi cells
+configure = --prob=runaway_bh --coord=cylindrical -hdf5 [-mpi]
+
+<job>
+problem_id = RunawayBH
+
+<output1>
+file_type  = hst
+dt         = 0.1
+
+<output2>
+file_type  = hdf5
+variable   = prim
+dt         = 1.0
+
+<output3>
+file_type  = rst
+dt         = 5.0
+
+<time>
+cfl_number = 0.3
+nlim       = -1
+tlim       = 10.0       # ~10 kyr, ~2 domain crossing times
+integrator = vl2
+xorder     = 2
+ncycle_out = 100
+
+<mesh>
+nx1        = 128        # R
+x1min      = 0.0
+x1max      = 2.0
+ix1_bc     = reflecting # symmetry axis
+ox1_bc     = outflow
+
+nx2        = 4          # phi: few cells, axisymmetric flow
+x2min      = 0.0
+x2max      = 6.2831853071795862
+ix2_bc     = periodic
+ox2_bc     = periodic
+
+nx3        = 512       # z
+x3min      = -14.0
+x3max      = 2.0
+ix3_bc     = outflow   
+ox3_bc     = user
+
+<meshblock>
+nx1        = 128
+nx2        = 4
+nx3        = 512
+
+<hydro>
+gamma      = 1.666666666667
+dfloor     = 1.0e-6
+pfloor     = 1.0e-8
+
+<problem>
+n_cgm       = 1.0e-3            #1 mp/cc       
+T_cgm       = 1e6               #K
+M_bh        = 8.11e8            #2e7 M_solar 
+v_bh        = 1.0               #1000km/s
+epsilon     = 1.0e-2            #pc (0.1R_bondi)
+
+<units>
+unit_system = custom
+length_cgs  = 3.086e+18         # 1 pc  'L0'
+mass_cgs    = 4.907e+31         # 1 (kpc^3)*(1mp/cm^3)   'L0^3*rho0'
+time_cgs    = 3.086e+10         # 0.97 kyr; v0 = 1000 km/s
