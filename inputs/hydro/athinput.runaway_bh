@@ -1,0 +1,74 @@
+<comment>
+problem   = runaway BH (M = 2e7 Msun, v = 1000 km/s) in uniform CGM, BH rest frame
+reference = Bondi-Hoyle-Lyttleton accretion; axisymmetric (R,z) via few phi cells
+configure = --prob=runaway_bh --coord=cylindrical -hdf5 [-mpi]
+
+# Code units: length = 1 pc, velocity = 1000 km/s, density = 1e-3 m_p cm^-3
+#   time = 977.8 yr, mass = 2.471e-5 Msun, Mdot = 2.527e-8 Msun/yr
+# CGM: T = 1e6 K, mu = 0.6 -> c_s = 151.4 km/s, Mach = 6.60
+# R_A = 2GM/(v^2+c_s^2) = 0.168 pc, Mdot_BHL = pi R_A^2 rho sqrt(v^2+c_s^2) = 0.0899
+
+<job>
+problem_id = RunawayBH
+
+<output1>
+file_type  = hst
+dt         = 0.05
+
+<output2>
+file_type  = hdf5
+variable   = prim
+dt         = 0.5
+
+<output3>
+file_type  = rst
+dt         = 5.0
+
+<time>
+cfl_number = 0.3
+nlim       = -1
+tlim       = 30.0       # ~30 kyr, ~2 domain crossing times
+integrator = vl2
+xorder     = 2
+ncycle_out = 100
+
+<mesh>
+nx1        = 192        # R
+x1min      = 0.0
+x1max      = 4.0
+x1rat      = 1.0126     # geometric: dR = 0.005 pc at axis, 0.055 pc at R_max
+ix1_bc     = reflecting # symmetry axis
+ox1_bc     = outflow
+
+nx2        = 4          # phi: few cells, axisymmetric flow
+x2min      = 0.0
+x2max      = 6.2831853071795862
+ix2_bc     = periodic
+ox2_bc     = periodic
+
+nx3        = 640        # z
+x3min      = -2.0
+x3max      = 14.0
+x3rat      = -1.0       # user sinh grid: dz = 0.005 pc at z = 0, 0.13 pc at z = 14
+ix3_bc     = user       # CGM inflow
+ox3_bc     = outflow
+
+<meshblock>
+nx1        = 48
+nx2        = 4
+nx3        = 64
+
+<hydro>
+gamma      = 1.666666666667
+dfloor     = 1.0e-6
+pfloor     = 1.0e-8
+
+<problem>
+GM_bh      = 0.08603    # G * 2e7 Msun in code units
+d_amb      = 1.0
+p_amb      = 0.013761   # rho k T / (mu m_p), T = 1e6 K
+v_amb      = 1.0        # 1000 km/s in +z
+r_sink     = 0.025      # ~0.15 R_A, ~5 cells
+softening  = 0.0125
+d_sink     = 0.01
+zgrid_b    = 6.0
