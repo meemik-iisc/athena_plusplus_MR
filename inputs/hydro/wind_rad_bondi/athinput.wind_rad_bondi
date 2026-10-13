@@ -8,12 +8,14 @@ problem_id = RunawayBH
 
 <output1>
 file_type  = hst
-dt         = 0.1
+dt         = 0.01
 
 <output2>
-file_type  = hdf5
-variable   = prim
-dt         = 1.0
+file_type   = hdf5
+variable    = prim
+dt          = 0.1
+xdmf        = 0
+data_format = float32     # same as the default: single precision
 
 <output3>
 file_type  = rst
@@ -22,34 +24,34 @@ dt         = 5.0
 <time>
 cfl_number = 0.3
 nlim       = -1
-tlim       = 10.0       # ~10 kyr, ~2 domain crossing times
+tlim       = 10.0       # ~10 kyr
 integrator = vl2
 xorder     = 2
 ncycle_out = 100
 
 <mesh>
-nx1        = 128        # R
+nx1        = 512        # R
 x1min      = 0.0
 x1max      = 2.0
 ix1_bc     = reflecting # symmetry axis
 ox1_bc     = outflow
 
-nx2        = 4          # phi: few cells, axisymmetric flow
+nx2        = 2          # phi: few cells, axisymmetric flow
 x2min      = 0.0
 x2max      = 6.2831853071795862
 ix2_bc     = periodic
 ox2_bc     = periodic
 
-nx3        = 512       # z
+nx3        = 4096       # z
 x3min      = -14.0
 x3max      = 2.0
 ix3_bc     = outflow   
 ox3_bc     = user
 
 <meshblock>
-nx1        = 128
-nx2        = 4
-nx3        = 512
+nx1        = 256        #2 meshblock
+nx2        = 2          #1 meshblock 
+nx3        = 1024       #4 meshblock
 
 <hydro>
 gamma      = 1.666666666667
